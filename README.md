@@ -1,4 +1,4 @@
-#Supervised Auto-Encoder MLP
+#Supervised Auto-Encoder MLP#
 
 Pytorch implementation of a Supervised Auto-Encoder MLP model for use in finanical ML competitions.
 
