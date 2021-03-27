@@ -6,4 +6,6 @@ Idea is that AE will be trained to generate a reduced dimension (encoder output)
 
 Loss function can be modified wrt task (e.g. BCE for classification, MSE for regression, etc.).
 
+Some code is recycled from my Resnet repo (e.g. GaussNoise layer, earlystopping, purged K-fold).
+
 Based on: https://www.kaggle.com/gogo827jz/jane-street-supervised-autoencoder-mlp
