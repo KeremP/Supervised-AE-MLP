@@ -4,7 +4,7 @@ Pytorch implementation of a Supervised Auto-Encoder MLP model for use in finanic
 
 Idea is that AE will be trained to generate a reduced dimension (encoder output) representation of dataset, then train MLP on concatenation of encoder output and raw input.
 
-Loss function can be modified wrt task (e.g. BCE for classification, MSE for regression, etc.).
+Loss function can be modified wrt task (e.g. BCE for classification, MSE for regression, etc.). May Require modifying output activation functions (e.g. from ReLU to Sigmoid for binary trade classification).
 
 Some code is recycled from my Resnet repo (e.g. GaussNoise layer, earlystopping, purged K-fold).
 
