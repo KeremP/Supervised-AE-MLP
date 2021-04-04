@@ -31,7 +31,7 @@ def train_fn(ae, mlp, ae_opt, mlp_opt, eras, train_dataset, feat_cols, target_co
         mlp_opt.step()
         ae_opt.step()
 
-        final_loss += ae_loss.item()
+        final_loss += loss.item()
 
     final_loss/=len(eras)
 
