@@ -87,16 +87,16 @@ class MLP(nn.Module):
         self.sequential = nn.Sequential(*layers)
 
 
-        def forward(self, x, encoder_outputs):
-            x = torch.cat([x,encoder_outputs],1)
+    def forward(self, x, encoder_outputs):
+        x = torch.cat([x,encoder_outputs],1)
 
-            x = self.init_bn(x)
-            x = self.init_drop(x)
+        x = self.init_bn(x)
+        x = self.init_drop(x)
 
-            #MLP
-            x = self.sequential(x)
+        #MLP
+        x = self.sequential(x)
 
-            #output
-            x = self.relu(x)
+        #output
+        x = self.relu(x)
 
-            return x
+        return x
