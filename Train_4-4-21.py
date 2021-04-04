@@ -24,6 +24,9 @@ train = train.astype({c: np.float32 for c in train.select_dtypes(include='float6
 
 feat_cols = [c for c in train.columns if "feature" in c]
 
+#scaling
+train[feat_cols] = train[feat_cols] - 0.5
+
 train['erano'] = train.era.str.slice(3).astype(int)
 
 #hold out sets
@@ -88,7 +91,8 @@ for _fold, (tr,te) in enumerate(splits):
         ae_scheduler.step()
         mlp_scheduler.step()
         valid_loss, valid_preds = inference(auto_encoder, mlp, valid_eras, valid_dataset, device, loss_fn)
-        nn.utils.clip_grad_norm_(model.parameters(),5)
+        nn.utils.clip_grad_norm_(auto_ecoder.parameters(),5)
+        nn.utils.clip_grad_norm_(mlp.parameters(),5)
 
         es(valid_loss,model,model_path=model_weights)
         if es.early_stop:
