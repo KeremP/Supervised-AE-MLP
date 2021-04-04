@@ -79,7 +79,7 @@ class MLP(nn.Module):
         #MLP as sequential module
         layers = []
         layers.append(nn.Linear(num_cols+encoder_cols,hidden_units[2]))
-        for i in range(2,len(hidden_units)):
+        for i in range(2,len(hidden_units)-1):
             layers.append(nn.Linear(hidden_units[i],hidden_units[i+1]))
             layers.append(nn.BatchNorm1d(hidden_units[i+1]))
             layers.append(nn.ReLU())
