@@ -20,7 +20,7 @@ def train_fn(ae, mlp, ae_opt, mlp_opt, eras, train_dataset, feat_cols, target_co
         mlp_opt.zero_grad()
 
         #auto encoder
-        ae_ouptut, encoder = ae(X)
+        ae_output, encoder = ae(X)
         ae_loss = loss_fn(ae_output,y)
         ae_loss.backward()
         ae_opt.step()
