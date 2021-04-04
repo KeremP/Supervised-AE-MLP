@@ -10,8 +10,8 @@ import numpy as np
 def train_fn(ae, mlp, ae_opt, mlp_opt, eras, train_dataset, feat_cols, target_cols,loss_fn, device):
     ae.train()
     mlp.train()
-    final_ae_loss = 0
-    final_mlp_loss = 0
+    final_loss = 0
+
 
     for era in eras:
         df = train_dataset[train_dataset.era==era]
@@ -21,23 +21,21 @@ def train_fn(ae, mlp, ae_opt, mlp_opt, eras, train_dataset, feat_cols, target_co
 
         #auto encoder
         ae_output, encoder = ae(X)
-        ae_loss = loss_fn(ae_output,y)
-        ae_loss.backward()
-        ae_opt.step()
+        # ae_loss = loss_fn(ae_output,y)
+        # ae_loss.backward()
 
         #MLP
         output = mlp(X,encoder)
-        mlp_loss = loss_fn(output,y)
-        mlp_loss.backward()
+        loss = loss_fn(output,y)
+        loss.backward()
         mlp_opt.step()
+        ae_opt.step()
 
+        final_loss += ae_loss.item()
 
-        final_ae_loss += ae_loss.item()
-        final_mlp_loss += mlp_loss.item()
-    final_ae_loss/=len(eras)
-    final_mlp_loss/=len(eras)
+    final_loss/=len(eras)
 
-    return final_ae_loss, final_mlp_loss
+    return final_loss
 
 #inference function - outputs val_loss and epoch predictions for eval
 def inference(ae, mlp, eras, val_dataset, feat_cols, target_cols, device,loss_fn=None):

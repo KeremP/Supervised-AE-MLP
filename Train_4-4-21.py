@@ -87,7 +87,7 @@ for _fold, (tr,te) in enumerate(splits):
 
 
     for epoch in (t:=trange(EPOCHS)):
-        ae_loss, mlp_loss = train_fn(auto_encoder, mlp, ae_opt, mlp_opt, train_eras, train_dataset, feat_cols, 'target', loss_fn, device)
+        train_loss = train_fn(auto_encoder, mlp, ae_opt, mlp_opt, train_eras, train_dataset, feat_cols, 'target', loss_fn, device)
         ae_scheduler.step()
         mlp_scheduler.step()
         valid_loss, valid_preds = inference(auto_encoder, mlp, valid_eras, valid_dataset, feat_cols, 'target', device, loss_fn)
@@ -99,4 +99,4 @@ for _fold, (tr,te) in enumerate(splits):
             print('Early stopping')
             break
 
-        t.set_description('AE train loss {} MLP train loss {} Valid loss {}'.format(ae_loss,mlp_loss,valid_loss))
+        t.set_description('Train loss {} Valid loss {}'.format(train_loss,valid_loss))
