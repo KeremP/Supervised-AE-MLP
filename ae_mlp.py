@@ -84,7 +84,7 @@ class MLP(nn.Module):
             layers.append(nn.BatchNorm1d(hidden_units[i+1]))
             layers.append(nn.ReLU())
             layers.append(nn.Dropout(drop_rates[i+2]))
-
+        layers.append(nn.Linear(hidden_units[-1],num_labels))
         self.sequential = nn.Sequential(*layers)
 
 
