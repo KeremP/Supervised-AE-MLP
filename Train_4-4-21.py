@@ -28,7 +28,7 @@ train_set = train.query('erano < 100').reset_index(drop=True)
 
 
 #PurgedGroupTimeSeriesSplit - K-fold CV, prevents leakage of data from train to validation
-
+print('PurgedGroupTimeSeriesSplit')
 gkf = PurgedGroupTimeSeriesSplit(n_splits=5, group_gap=20)
 #five splits, grouped by eras, gap of 20.
 splits = list(gkf.split(train_set['target'],groups=train_set['erano'].values))
