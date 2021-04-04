@@ -1,14 +1,17 @@
 import os
 import pandas as pd
 import torch
+import torch.nn as nn
 import numpy as np
 from sklearn import cluster
+from tqdm import tqdm, trange
 
 from earlystopping import EarlyStopping
 from purgedSplit import PurgedGroupTimeSeriesSplit
 from utils import train_fn, inference
 
 from ae_mlp import AE, MLP
+device = torch.device('cuda')
 
 data_path = "../Numerai/numerai_dataset_258/numerai_training_data.csv"
 
@@ -41,7 +44,7 @@ hidden_units = [96, 96, 896, 448, 448, 256]
 drop_rates = [0.03527936123679956, 0.038424974585075086, 0.42409238408801436, 0.10431484318345882, 0.49230389137187497, 0.32024444956111164, 0.2716856145683449, 0.4379233941604448]
 lr = 1e-3
 CACHE_PATH = './models'
-device = torch.device('cuda')
+
 
 #training loop
 for _fold, (tr,te) in enumerate(splits):
@@ -57,11 +60,11 @@ for _fold, (tr,te) in enumerate(splits):
 
     #optimizers
     ae_opt = torch.optim.Adam(auto_encoder.parameters(),lr=lr)
-    mlp_opt = torch.optim.Adam(mlp.parameteres(),lr=lr)
+    mlp_opt = torch.optim.Adam(mlp.parameters(),lr=lr)
 
     #LR schedulers
     ae_scheduler = torch.optim.lr_scheduler.CyclicLR(ae_opt,base_lr=lr,max_lr=3e-2,cycle_momentum=False)
-    mlp_scheduler = torch.optim.lr_scheduler.CyclicLR(mlp_opt, base_lr=lr, max_lr=3e-2, cycle_momemtum=False)
+    mlp_scheduler = torch.optim.lr_scheduler.CyclicLR(mlp_opt, base_lr=lr, max_lr=3e-2, cycle_momentum=False)
 
     #MSE loss
     loss_fn = nn.MSELoss()

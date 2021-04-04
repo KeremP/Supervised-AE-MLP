@@ -7,7 +7,6 @@ import torch.functional as F
 import numpy as np
 from GaussianNoise import GaussianNoise
 
-
 class AE(nn.Module):
     def __init__(self, num_cols, num_labels, hidden_units, drop_rates):
         super(AE,self).__init__()

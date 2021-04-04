@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+device = torch.device('cuda')
 
 #Based on implementation by Yann Dubois
 class GaussianNoise(nn.Module):
