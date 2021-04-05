@@ -8,7 +8,7 @@ from tqdm import tqdm, trange
 
 from earlystopping import EarlyStopping
 from purgedSplit import PurgedGroupTimeSeriesSplit
-from utils import train_ae, inference
+from utils import train_ae, inference_ae
 
 from ae_mlp import AE, MLP
 device = torch.device('cuda')
