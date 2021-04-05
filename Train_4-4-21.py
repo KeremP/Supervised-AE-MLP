@@ -87,10 +87,10 @@ for _fold, (tr,te) in enumerate(splits):
 
 
     for epoch in (t:=trange(EPOCHS)):
-        train_loss = train_fn(mlp, mlp_opt, train_eras, train_dataset, loss_fn, device)
+        train_loss = train_fn(mlp, mlp_opt, train_eras, train_dataset, feat_cols, 'target', loss_fn, device)
         # ae_scheduler.step()
         mlp_scheduler.step()
-        valid_loss, valid_preds = inference(mlp, valid_eras, valid_dataset, device, loss_fn)
+        valid_loss, valid_preds = inference(mlp, valid_eras, valid_dataset, feat_cols, 'target', device, loss_fn)
         # nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
         nn.utils.clip_grad_norm_(mlp.parameters(),5)
 
