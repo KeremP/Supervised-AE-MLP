@@ -30,7 +30,7 @@ class MarketDataset:
 
 
 #training function
-def train_fn(model, optimizer, eras, train_dataset, loss_fn, device):
+def train_fn(model, optimizer, eras, train_dataset, feat_cols, target_cols, loss_fn, device):
     model.train()
     final_loss = 0
 
@@ -49,7 +49,7 @@ def train_fn(model, optimizer, eras, train_dataset, loss_fn, device):
     return final_loss
 
 #inference function - outputs val_loss and epoch predictions for eval
-def inference(model, eras, val_dataset, device,loss_fn=None):
+def inference(model, eras, val_dataset, feat_cols, target_cols, device,loss_fn=None):
     model.eval()
     preds = []
     val_loss = 0
