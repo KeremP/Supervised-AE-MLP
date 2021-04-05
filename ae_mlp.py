@@ -53,11 +53,9 @@ class AE(nn.Module):
         output = self.ae_1(decoder)
         output = self.ae_2(output)
         output = self.ae_3(output)
-
-        output = self.relu(output)
-
         output = self.ae_out(output)
 
+        output = self.relu(output)
 
 
         return output, encoder

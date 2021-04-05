@@ -67,7 +67,7 @@ def train_mlp(mlp, ea, optimizer, eras, train_dataset, feat_cols, target_cols, l
     return final_loss
 
 #inference function - outputs val_loss and epoch predictions for eval
-def inference(model, eras, val_dataset, feat_cols, target_cols, device,loss_fn=None):
+def inference_ae(model, eras, val_dataset, feat_cols, target_cols, device,loss_fn=None):
     model.eval()
     preds = []
     val_loss = 0
@@ -75,7 +75,7 @@ def inference(model, eras, val_dataset, feat_cols, target_cols, device,loss_fn=N
         df = val_dataset[val_dataset.era==era]
         X,y = torch.from_numpy(df[feat_cols].values).float().to(device),torch.from_numpy(df[target_cols].values).float().to(device)
         with torch.no_grad():
-            outputs = model(X)
+            outputs,_ = model(X)
         if loss_fn:
             loss = loss_fn(outputs,y)
 
