@@ -82,16 +82,16 @@ for _fold, (tr,te) in enumerate(splits):
     valid_dataset = train_set.loc[te]
     train_eras = train_dataset.era.unique()
     valid_eras = valid_dataset.era.unique()
-    np.random.shuffle(train_eras)
-    np.random.shuffle(valid_eras)
+    # np.random.shuffle(train_eras)
+    # np.random.shuffle(valid_eras)
 
 
     for epoch in (t:=trange(EPOCHS)):
-        train_loss = train_fn(auto_encoder, mlp, ae_opt, mlp_opt, train_eras, train_dataset, feat_cols, 'target', loss_fn, device)
-        ae_scheduler.step()
+        train_loss = train_fn(mlp, mlp_opt, train_eras, train_dataset, loss_fn, device)
+        # ae_scheduler.step()
         mlp_scheduler.step()
-        valid_loss, valid_preds = inference(auto_encoder, mlp, valid_eras, valid_dataset, feat_cols, 'target', device, loss_fn)
-        nn.utils.clip_grad_norm_(auto_ecoder.parameters(),5)
+        valid_loss, valid_preds = inference(mlp, valid_eras, valid_dataset, device, loss_fn)
+        # nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
         nn.utils.clip_grad_norm_(mlp.parameters(),5)
 
         es(valid_loss,model,model_path=model_weights)
