@@ -29,8 +29,26 @@ class MarketDataset:
 
 
 
-#training function
-def train_fn(model, optimizer, eras, train_dataset, feat_cols, target_cols, loss_fn, device):
+#AE train
+def train_ae(model, optimizer, eras, train_dataset, feat_cols, target_cols, loss_fn, device):
+    model.train()
+    final_loss = 0
+
+    for era in eras:
+        df = train_dataset[train_dataset.era==era]
+        X,y = torch.from_numpy(df[feat_cols].values).float().to(device),torch.from_numpy(df[target_cols].values).float().to(device)
+        optimizer.zero_grad()
+        outputs,_ = model(X)
+        loss = loss_fn(outputs,y)
+        loss.backward()
+        optimizer.step()
+
+        final_loss += loss.item()
+    final_loss/=len(eras)
+
+    return final_loss
+#MLP train
+def train_mlp(mlp, ea, optimizer, eras, train_dataset, feat_cols, target_cols, loss_fn, device):
     model.train()
     final_loss = 0
 

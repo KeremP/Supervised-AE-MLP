@@ -8,7 +8,7 @@ from tqdm import tqdm, trange
 
 from earlystopping import EarlyStopping
 from purgedSplit import PurgedGroupTimeSeriesSplit
-from utils import train_fn, inference
+from utils import train_ae, inference
 
 from ae_mlp import AE, MLP
 device = torch.device('cuda')
@@ -58,16 +58,11 @@ for _fold, (tr,te) in enumerate(splits):
     auto_encoder = AE(num_cols,num_labels,hidden_units,drop_rates)
     auto_encoder = auto_encoder.to(device)
 
-    mlp = MLP(num_cols,hidden_units[1],num_labels,hidden_units,drop_rates)
-    mlp = mlp.to(device)
-
     #optimizers
     ae_opt = torch.optim.Adam(auto_encoder.parameters(),lr=lr)
-    mlp_opt = torch.optim.Adam(mlp.parameters(),lr=lr)
 
     #LR schedulers
     ae_scheduler = torch.optim.lr_scheduler.CyclicLR(ae_opt,base_lr=lr,max_lr=3e-2,cycle_momentum=False)
-    mlp_scheduler = torch.optim.lr_scheduler.CyclicLR(mlp_opt, base_lr=lr, max_lr=3e-2, cycle_momentum=False)
 
     #MSE loss
     loss_fn = nn.MSELoss()
@@ -87,12 +82,11 @@ for _fold, (tr,te) in enumerate(splits):
 
 
     for epoch in (t:=trange(EPOCHS)):
-        train_loss = train_fn(mlp, mlp_opt, train_eras, train_dataset, feat_cols, 'target', loss_fn, device)
-        # ae_scheduler.step()
-        mlp_scheduler.step()
-        valid_loss, valid_preds = inference(mlp, valid_eras, valid_dataset, feat_cols, 'target', device, loss_fn)
-        # nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
-        nn.utils.clip_grad_norm_(mlp.parameters(),5)
+        train_loss = train_ae(auto_encoder, ae_opt, train_eras, train_dataset, feat_cols, 'target', loss_fn, device)
+        ae_scheduler.step()
+
+        valid_loss, valid_preds = inference(auto_encoder, valid_eras, valid_dataset, feat_cols, 'target', device, loss_fn)
+        nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
 
         es(valid_loss,model,model_path=model_weights)
         if es.early_stop:
