@@ -85,7 +85,7 @@ for _fold, (tr,te) in enumerate(splits):
         train_loss = train_ae(auto_encoder, ae_opt, train_eras, train_dataset, feat_cols, ['target'], loss_fn, device)
         ae_scheduler.step()
 
-        valid_loss, valid_preds = inference(auto_encoder, valid_eras, valid_dataset, feat_cols, ['target'], device, loss_fn)
+        valid_loss, valid_preds = inference_ae(auto_encoder, valid_eras, valid_dataset, feat_cols, ['target'], device, loss_fn)
         nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
 
         es(valid_loss,model,model_path=model_weights)
