@@ -88,7 +88,7 @@ for _fold, (tr,te) in enumerate(splits):
         valid_loss, valid_preds = inference_ae(auto_encoder, valid_eras, valid_dataset, feat_cols, ['target'], device, loss_fn)
         nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
 
-        es(valid_loss,model,model_path=model_weights)
+        es(valid_loss,auto_encoder,model_path=model_weights)
         if es.early_stop:
             print('Early stopping')
             break
