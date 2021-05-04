@@ -25,7 +25,7 @@ def train_ae(model, optimizer, dataloader ,loss_fn, device):
     for data in dataloader:
         X,y = data['features'].to(device), data['targets'].to(device)
         optimizer.zero_grad()
-        outputs,_ = model(X)
+        outputs,_ = model(X).to(device)
         loss = loss_fn(outputs,y)
         loss.backward()
         optimizer.step()
@@ -44,8 +44,8 @@ def train_mlp(mlp, ae, optimizer, dataloader, loss_fn, device):
     for data in dataloader:
         X,y = data['features'].to(device),data['targets'].to(device)
         optimizer.zero_grad()
-        decoder,encoder = ae(X)
-        outputs = mlp(X,encoder)
+        decoder,encoder = ae(X).to(device)
+        outputs = mlp(X,encoder).to(device)
         loss = loss_fn(outputs,y)
         loss.backward()
         optimizer.step()
@@ -64,8 +64,8 @@ def inference_mlp(mlp, ae, dataloader, loss_fn, device):
     for data in dataloader:
         X,y = data['features'].to(device),data['targets'].to(device)
         with torch.no_grad():
-            decoder,encoder = ae(X)
-            outputs = mlp(X,encoder)
+            decoder,encoder = ae(X).to(device)
+            outputs = mlp(X,encoder).to(device)
         if loss_fn:
             loss = loss_fn(outputs,y)
 
