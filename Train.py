@@ -91,7 +91,7 @@ for _fold, (tr,te) in enumerate(splits):
         mlp_scheduler.step(valid_loss)
         nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
 
-        es(valid_loss,auto_encoder,model_path=model_weights)
+        es(valid_loss,mlp,model_path=model_weights)
         if es.early_stop:
             print('Early stopping')
             break
