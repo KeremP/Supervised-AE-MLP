@@ -19,14 +19,21 @@ class AE(nn.Module):
         self.init_bn = nn.BatchNorm1d(num_cols)
 
         #encoder
-        self.enc_1 = GaussianNoise()
-        self.enc_2 = nn.Linear(num_cols,hidden_units[0])
-        self.enc_3 = nn.BatchNorm1d(hidden_units[0])
-        self.silu = nn.SiLU()
+        enc_layers = []
+        enc_layers.append(self.enc_1 = GaussianNoise())
+        enc_layers.append(self.enc_2 = nn.Linear(num_cols,hidden_units[0]))
+        enc_layers.append(self.enc_3 = nn.BatchNorm1d(hidden_units[0]))
+        for i in range(len(hidden_units)-1):
+            enc_layers.append(nn.Linear(hidden_units[i],hidden_units[i+1]))
+            enc_layers.append(nn.BatchNorm1d(hidden_units[i+1]))
+            enc_layers.append(nn.Dropout(drop_rates[i]))
+        self.sequential = nn.Sequential(*enc_layers)
+
+
 
         #decoder
-        self.dec_1 = nn.Dropout(drop_rates[0])
-        self.dec_2 = nn.Linear(hidden_units[0],num_cols)
+        self.dec_1 = nn.Dropout(drop_rates[-1])
+        self.dec_2 = nn.Linear(hidden_units[-1],num_cols)
 
         #ae output
         self.ae_1 = nn.Linear(num_cols,hidden_units[1])
@@ -35,27 +42,25 @@ class AE(nn.Module):
 
         self.ae_out = nn.Linear(hidden_units[1],num_labels)
         self.relu = nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         #initial batch norm
         x = self.init_bn(x)
 
         #encoder step
-        encoder = self.enc_1(x)
-        encoder = self.enc_2(encoder)
-        encoder = self.enc_3(encoder)
-        encoder = self.silu(encoder)
+        encoder = self.sequential(x)
 
         #decoder step
         decoder = self.dec_1(encoder)
-        decoder = self.dec_2(encoder)
+        decoder = self.dec_2(decoder)
 
         output = self.ae_1(decoder)
         output = self.ae_2(output)
         output = self.ae_3(output)
         output = self.ae_out(output)
 
-        output = self.relu(output)
+        output = self.sigmoid(output)
 
 
         return output, encoder
@@ -72,19 +77,19 @@ class MLP(nn.Module):
         self.drop_rates = drop_rates
 
         self.init_bn = nn.BatchNorm1d(num_cols+encoder_cols)
-        self.init_drop = nn.Dropout(drop_rates[3])
+        self.init_drop = nn.Dropout(drop_rates[0])
 
         self.relu = nn.ReLU()
 
 
         #MLP as sequential module
         layers = []
-        layers.append(nn.Linear(num_cols+encoder_cols,hidden_units[2]))
-        for i in range(2,len(hidden_units)-1):
+        layers.append(nn.Linear(num_cols+encoder_cols,hidden_units[0]))
+        for i in range(len(hidden_units)-1):
             layers.append(nn.Linear(hidden_units[i],hidden_units[i+1]))
             layers.append(nn.BatchNorm1d(hidden_units[i+1]))
             layers.append(nn.ReLU())
-            layers.append(nn.Dropout(drop_rates[i+2]))
+            layers.append(nn.Dropout(drop_rates[i]))
         layers.append(nn.Linear(hidden_units[-1],num_labels))
         self.sequential = nn.Sequential(*layers)
 
