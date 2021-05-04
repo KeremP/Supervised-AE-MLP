@@ -18,7 +18,7 @@ class MarketDataset:
         }
 
 #AE train
-def train_ae(model, optimizer, datalaoder ,loss_fn, device):
+def train_ae(model, optimizer, dataloader ,loss_fn, device):
     model.train()
     final_loss = 0
 
