@@ -20,9 +20,9 @@ class AE(nn.Module):
 
         #encoder
         enc_layers = []
-        enc_layers.append(self.enc_1 = GaussianNoise())
-        enc_layers.append(self.enc_2 = nn.Linear(num_cols,hidden_units[0]))
-        enc_layers.append(self.enc_3 = nn.BatchNorm1d(hidden_units[0]))
+        enc_layers.append(GaussianNoise())
+        enc_layers.append(nn.Linear(num_cols,hidden_units[0]))
+        enc_layers.append(nn.BatchNorm1d(hidden_units[0]))
         for i in range(len(hidden_units)-1):
             enc_layers.append(nn.Linear(hidden_units[i],hidden_units[i+1]))
             enc_layers.append(nn.BatchNorm1d(hidden_units[i+1]))
