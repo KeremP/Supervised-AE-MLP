@@ -36,7 +36,7 @@ def train_ae(model, optimizer, dataloader ,loss_fn, device):
     return final_loss
 
 #MLP train
-def train_mlp(mlp, ae, optimizer, dataloder, loss_fn, device):
+def train_mlp(mlp, ae, optimizer, dataloader, loss_fn, device):
     mlp.train()
     ae.eval()
     final_loss = 0
