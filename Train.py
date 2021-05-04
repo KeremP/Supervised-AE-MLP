@@ -56,7 +56,7 @@ for _fold, (tr,te) in enumerate(splits):
     #define models, push to CUDA device
     auto_encoder = AE(num_cols,num_labels,hidden_units,drop_rates)
     auto_encoder = auto_encoder.to(device)
-    mlp = MLP(num_cols, hidden_units[-1],1,hidden_units,drop_rates)
+    mlp = MLP(num_cols, hidden_units[-1],1,hidden_units,drop_rates).to(device)
 
     #optimizers
     ae_opt = torch.optim.Adam(auto_encoder.parameters(),lr=lr)
