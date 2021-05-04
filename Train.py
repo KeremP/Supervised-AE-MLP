@@ -87,7 +87,7 @@ for _fold, (tr,te) in enumerate(splits):
         ae_scheduler.step(train_lossAE)
 
         train_lossMLP = train_mlp(mlp,auto_encoder,mlp_opt,trainLoader,loss_fnMLP,device)
-        valid_loss, valid_preds = inference_mlp(mlp, auto_encoder, valLoader, device, loss_fn)
+        valid_loss, valid_preds = inference_mlp(mlp, auto_encoder, valLoader, device, loss_fnMLP)
         mlp_scheduler(valid_loss)
         nn.utils.clip_grad_norm_(auto_encoder.parameters(),5)
 
